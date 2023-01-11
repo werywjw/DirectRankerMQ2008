@@ -4,7 +4,8 @@ import pickle
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import train_test_split
 
-from supplementary_code_direct_ranker.helpers import nDCG_cls
+#from supplementary_code_direct_ranker.helpers import nDCG_cls
+import helpers as hlps
 
 import time
 
@@ -53,7 +54,7 @@ class directRanker(BaseEstimator):
                  max_steps=10000,
                  learning_rate_step_size=500,
                  learning_rate_decay_factor=0.944,
-                 optimizer=tf.train.AdamOptimizer,
+                 optimizer=tf.optimizers.Adam(),
                  print_step=0,
                  feature_func=None,
                  feature_func_nn0_1=None,
@@ -65,7 +66,7 @@ class directRanker(BaseEstimator):
                  input_dropout=0.,
                  early_stopping=False,
                  validation_size=0.2,
-                 stop_scorer=nDCG_cls,
+                 stop_scorer=hlps.nDCG_cls,
                  lookback=10,
                  stop_delta=0.001,
                  random_seed=None,
@@ -499,10 +500,10 @@ class directRanker(BaseEstimator):
 
                 if cur_score >= scores[best_sf] + self.stop_delta or step == self.stop_start:
                     best_sf = step - self.stop_start
-                    saver.save(self.sess, "./tmp/{}_{}.ckpt".format(self.name, tmp_name))
+                    #saver.save(self.sess, "./tmp/{}_{}.ckpt".format(self.name, tmp_name))
 
                 if step - best_sf > self.lookback:
-                    saver.restore(self.sess, "./tmp/{}_{}.ckpt".format(self.name, tmp_name))
+                    #saver.restore(self.sess, "./tmp/{}_{}.ckpt".format(self.name, tmp_name))
                     break
 
     def _fit_querys_f(self, dictOfQueries, validation, use_weights):
