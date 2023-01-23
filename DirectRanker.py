@@ -1,5 +1,8 @@
 import numpy as np
-import tensorflow as tf
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+import tensorflow as tf2
 import pickle
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import train_test_split
@@ -54,7 +57,7 @@ class directRanker(BaseEstimator):
                  max_steps=10000,
                  learning_rate_step_size=500,
                  learning_rate_decay_factor=0.944,
-                 optimizer=tf.optimizers.Adam(),
+                 optimizer=tf.train.AdamOptimizer,
                  print_step=0,
                  feature_func=None,
                  feature_func_nn0_1=None,
@@ -198,7 +201,7 @@ class directRanker(BaseEstimator):
         self.should_drop = tf.placeholder(tf.bool, name="drop")
 
         # Regularization
-        regularizer = tf.contrib.layers.l2_regularizer(self.weight_regularization)
+        regularizer = tf.keras.regularizers.l2(self.weight_regularization)
 
         # Input_Dropout
         in0 = tf.layers.dropout(inputs=self.x0,

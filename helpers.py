@@ -62,7 +62,7 @@ def readData(data_path=None, debug_data=False, binary=False, preprocessing="quan
         xt.append(x[q == qid])
         yt.append(y[q == qid])
 
-    return np.array(xt), np.array(yt), q
+    return xt, yt, q
 
 
 def nDCG_cls(estimator, X, y, at=10):
@@ -137,3 +137,49 @@ def MAP_cls(estimator, X, y):
 
     print("MAP: " + str(round(float(np.mean(listOfAvgP)), 4)) + " +- " + str(round(float(np.std(listOfAvgP)), 4)))
     return float(np.mean(listOfAvgP))
+
+if __name__ == "__main__":
+    x = []
+    y = []
+    q = []
+    for line in open("/Users/wery/Desktop/MSLR-WEB10K/Fold1/test.txt"):
+        s = line.split()
+        if False:
+            if int(s[0]) > 1.5:
+                y.append(1)
+            else:
+                y.append(0)
+        else:
+            y.append(int(s[0]))
+
+        q.append(int(s[1].split(":")[1]))
+
+        x.append(np.zeros(136))
+        for i in range(136):
+            x[-1][i] = float(s[i + 2].split(":")[1])
+
+    if "quantile_3" == "quantile_3":
+        x = QuantileTransformer(
+            output_distribution="normal").fit_transform(x) / 3
+    else:
+        x = np.array(x)
+    y = np.array([y]).transpose()
+    q = np.array(q)
+    xt = []
+    yt = []
+
+    for qid in np.unique(q):
+        cs = []
+        if False:
+            for yy in y[q == qid][:, 0]:
+                if yy not in cs:
+                    cs.append(yy)
+            if len(cs) == 1:
+                continue
+        xt.append(x[q == qid])
+        yt.append(y[q == qid])
+    
+        
+    #print(xt) #len()
+    #print(yt)
+    #print(q)

@@ -2,19 +2,25 @@ import sys
 
 sys.path.append('..')
 
-from supplementary_code_paper.helpers import nDCGScorer_cls, readData, MAP_cls
+import helpers as hlps
+import DirectRanker as drr
+#from supplementary_code_paper.helpers import nDCGScorer_cls, readData, MAP_cls
 import tensorflow as tf
 from sklearn.model_selection import GridSearchCV
-from supplementary_code_paper.DirectRanker import directRanker
+#from supplementary_code_paper.DirectRanker import directRanker
 from functools import partial
 import numpy as np
 
-list_of_train = ["/MQ2008/Fold1/train.txt", "/MQ2008/Fold2/train.txt",
-                 "/MQ2008/Fold3/train.txt", "/MQ2008/Fold4/train.txt",
-                 "/MQ2008/Fold5/train.txt"]
-list_of_test = ["/MQ2008/Fold1/test.txt", "/MQ2008/Fold2/test.txt",
-                "/MQ2008/Fold3/test.txt", "/MQ2008/Fold4/test.txt",
-                "/MQ2008/Fold5/test.txt"]
+list_of_train = ["/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold1/train.txt", 
+                 "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold2/train.txt",
+                 "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold3/train.txt", 
+                 "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold4/train.txt",
+                 "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold5/train.txt"]
+list_of_test = ["/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold1/test.txt", 
+                "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold2/test.txt",
+                "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold3/test.txt", 
+                "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold4/test.txt",
+                "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold5/test.txt"]
 
 try_name = "MQ2008_ndcg_run4"
 
@@ -25,9 +31,9 @@ parameters = {
     'dropout': [0., 0.5]
 }
 
-nDCGScorer10 = partial(nDCGScorer_cls, at=10)
+nDCGScorer10 = partial(hlps.nDCGScorer_cls, at=10)
 
-scoring = {'NDGC@10': nDCGScorer10, 'MAP': MAP_cls}
+scoring = {'NDGC@10': nDCGScorer10, 'MAP': hlps.MAP_cls}
 
 counter_id = 0
 counters = [1, 2, 3, 4, 5]
@@ -39,7 +45,7 @@ for train, test in zip(list_of_train, list_of_test):
     print("FOLD ", counter)
 
     # Load directRanker and set up gridsearch
-    dr = directRanker(
+    dr = drr.directRanker(
         feature_activation=tf.nn.tanh,
         ranking_activation=tf.nn.tanh,
         max_steps=3000,
@@ -58,9 +64,9 @@ for train, test in zip(list_of_train, list_of_test):
     )
 
     # MQ2007/8 binarize 1 if label > 0.5 else 0
-    x_train, y_train, _ = readData(data_path=train, binary=True, at=10, number_features=46, bin_cutoff=0.5,
+    x_train, y_train, _ = hlps.readData(data_path=train, binary=True, at=10, number_features=46, bin_cutoff=0.5,
                                    cut_zeros=True)
-    x_test, y_test, _ = readData(data_path=test, binary=True, at=10, number_features=46, bin_cutoff=0.5, cut_zeros=True)
+    x_test, y_test, _ = hlps.readData(data_path=test, binary=True, at=10, number_features=46, bin_cutoff=0.5, cut_zeros=True)
 
     clf = GridSearchCV(dr, parameters, cv=5, n_jobs=4, verbose=1, scoring=scoring, refit='NDGC@10',
                        return_train_score=False)
@@ -70,7 +76,7 @@ for train, test in zip(list_of_train, list_of_test):
     print("Best Parameters:")
     print(clf.best_params_)
 
-    score_map = MAP_cls(best_estimator, x_test, y_test)
+    score_map = hlps.MAP_cls(best_estimator, x_test, y_test)
     score = nDCGScorer10(best_estimator, x_test, y_test)
 
     print("Test on Fold" + str(counter) + ": NDCG@10=" + str(score) + "  MAP=" + str(score_map))

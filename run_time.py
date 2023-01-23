@@ -77,3 +77,10 @@ for i in range(10):
 
 print('Mean Time DirectRanker: ' + np.mean(time_dr) + " +- " + np.std(time_dr))
 print('Mean Time RankNet: ' + np.mean(time_rank) + " +- " + np.std(time_rank))
+
+# wery@Werys-MBP DirectRankerMQ2008 %  cd /Users/wery/Desktop/DirectRankerMQ2008 ; /usr/bin/env /usr/bin/python3 /Users/wery/.vscode/extensions/ms-python.p
+# ython-2022.20.2/pythonFiles/lib/python/debugpy/adapter/../../debugpy/launcher 52169 -- /Users/wery/Desktop/DirectRankerMQ2008/run_time.py 
+# Traceback (most recent call last):
+#   File "/Users/wery/Desktop/DirectRankerMQ2008/run_time.py", line 56, in <module>
+#     optimizer=tf.train.GradientDescentOptimizer,
+# AttributeError: module 'tensorflow._api.v2.train' has no attribute 'GradientDescentOptimizer'
