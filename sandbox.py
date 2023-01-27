@@ -12,13 +12,24 @@ import tensorflow as tf
 import helpers as hlps
 import DirectRanker as drr
 
+import warnings
+warnings.filterwarnings("ignore")
+
 # CHANGE THE DATA PATH!!!
 # Change number_features to 46 and binary=False for MQ2007/8 and 136 and binary=True for MSLR
-x_train, y_train, q_train = hlps.readData(data_path="/Users/wery/Desktop/MSLR-WEB10K/Fold1/train.txt", binary=True, at=10, number_features=136, bin_cutoff=1.5, cut_zeros=True)
-# For debugging
-# x_train, y_train, q_train = readData(debug_data=True, binary=True, at=10, number_features=136, bin_cutoff=1.5,
-#                                      cut_zeros=True)
-x_test, y_test, q_test = hlps.readData(data_path="/Users/wery/Desktop/MSLR-WEB10K/Fold1/test.txt", binary=True, at=10, number_features=136, bin_cutoff=1.5, cut_zeros=True)
+
+x_test, y_test, q_test = hlps.readData(data_path="/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold1/test.txt", 
+                                       binary=True, at=10, number_features=46, bin_cutoff=1.5, cut_zeros=True)
+x_train, y_train, q_train = hlps.readData(data_path="/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold1/train.txt", 
+                                          binary=True, at=10, number_features=46, bin_cutoff=1.5, cut_zeros=True)
+
+# x_train, y_train, q_train = hlps.readData(data_path="/Users/wery/Desktop/MSLR-WEB10K/Fold1/train.txt", 
+#                                           binary=True, at=10, number_features=136, bin_cutoff=1.5, cut_zeros=True)
+# # For debugging
+# # x_train, y_train, q_train = readData(debug_data=True, binary=True, at=10, number_features=136, bin_cutoff=1.5,
+# #                                      cut_zeros=True)
+# x_test, y_test, q_test = hlps.readData(data_path="/Users/wery/Desktop/MSLR-WEB10K/Fold1/test.txt", 
+#                                        binary=True, at=10, number_features=136, bin_cutoff=1.5, cut_zeros=True)
 # For debugging
 # x_test, y_test, q_test = readData(debug_data=True, binary=True, at=10, number_features=136, bin_cutoff=1.5,
 #                                   cut_zeros=True)
@@ -39,7 +50,7 @@ x_test, y_test, q_test = hlps.readData(data_path="/Users/wery/Desktop/MSLR-WEB10
 # x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=42)
 
 def lambda_cost(nn, y0):
-    return tf.reduce_mean(tf.log(1+tf.exp((1+nn)/2))-(1+nn)/2)
+    return tf.reduce_mean(tf.math.log(1+tf.exp((1+nn)/2))-(1+nn)/2)
 
 
 # Load directRanker, train, and test

@@ -11,6 +11,9 @@ from sklearn.model_selection import GridSearchCV
 from functools import partial
 import numpy as np
 
+# import warnings
+# warnings.filterwarnings("ignore")
+
 list_of_train = ["/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold1/train.txt", 
                  "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold2/train.txt",
                  "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2008/Fold3/train.txt", 
