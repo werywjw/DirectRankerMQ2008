@@ -11,12 +11,19 @@ from sklearn.model_selection import GridSearchCV
 from functools import partial
 import numpy as np
 
-list_of_train = ["/MQ2007/Fold1/train.txt", "/MQ2007/Fold2/train.txt",
-                 "/MQ2007/Fold3/train.txt", "/MQ2007/Fold4/train.txt",
-                 "/MQ2007/Fold5/train.txt"]
-list_of_test = ["/MQ2007/Fold1/test.txt", "/MQ2007/Fold2/test.txt",
-                "/MQ2007/Fold3/test.txt", "/MQ2007/Fold4/test.txt",
-                "/MQ2007/Fold5/test.txt"]
+import warnings
+warnings.filterwarnings("ignore")
+
+list_of_train = ["/Users/wery/Desktop/BAJiawenWang/dataset/MQ2007/Fold1/train.txt", 
+                 "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2007/Fold2/train.txt",
+                 "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2007/Fold3/train.txt", 
+                 "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2007/Fold4/train.txt",
+                 "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2007/Fold5/train.txt"]
+list_of_test = ["/Users/wery/Desktop/BAJiawenWang/dataset/MQ2007/Fold1/test.txt", 
+                "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2007/Fold2/test.txt",
+                "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2007/Fold3/test.txt", 
+                "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2007/Fold4/test.txt",
+                "/Users/wery/Desktop/BAJiawenWang/dataset/MQ2007/Fold5/test.txt"]
 
 try_name = "MQ2007_ndcg"
 

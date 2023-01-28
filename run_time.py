@@ -11,6 +11,9 @@ import helpers as hlps
 #from DirectRankerMQ2008.helpers import readData
 import timeit
 
+import warnings
+warnings.filterwarnings("ignore")
+
 # CHANGE THE DATA PATH!!!
 # Change number_features to 46 and binary=False for MQ2007/8 and 136 and binary=True for MSLR
 # x_train, y_train, q_train = readData(data_path="../data/MSLR-WEB10K/Fold1/train.txt", binary=True, at=10, number_features=136, bin_cutoff=1.5, cut_zeros=True)

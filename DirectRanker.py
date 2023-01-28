@@ -12,6 +12,8 @@ import helpers as hlps
 
 import time
 
+import warnings
+warnings.filterwarnings("ignore")
 
 def default_weight_function(w1, w2):
     return w1 * w2
@@ -204,18 +206,18 @@ class directRanker(BaseEstimator):
         regularizer = tf.keras.regularizers.l2(self.weight_regularization)
 
         # Input_Dropout
-        in0 = tf.keras.layers.Dropout(inputs=self.x0,
+        in0 = tf.layers.dropout(inputs=self.x0,
                                 rate=self.input_dropout,
                                 training=self.should_drop
                                 )
 
-        in1 = tf.keras.layers.Dropout(inputs=self.x1,
+        in1 = tf.layers.dropout(inputs=self.x1,
                                 rate=self.input_dropout,
                                 training=self.should_drop
                                 )
 
         # Constructing the feature creation part of the net
-        nn0 = tf.keras.layers.Dense(
+        nn0 = tf.layers.dense(
             inputs=in0,
             units=self.hidden_layers[0],
             activation=self.feature_activation,
@@ -227,7 +229,7 @@ class directRanker(BaseEstimator):
 
         # By giving nn1 the same name as nn0 and using the flag reuse=True, 
         # the weights and biases of all neurons in each branch are identical
-        nn1 = tf.keras.layers.Dense(
+        nn1 = tf.layers.dense(
             inputs=in1,
             units=self.hidden_layers[0],
             activation=self.feature_activation,
@@ -239,17 +241,17 @@ class directRanker(BaseEstimator):
         )
 
         # Layer Dropout
-        nn0 = tf.keras.layers.Dropout(inputs=nn0,
+        nn0 = tf.layers.dropout(inputs=nn0,
                                 rate=self.dropout,
                                 training=self.should_drop
                                 )
-        nn1 = tf.keras.layers.Dropout(inputs=nn1,
+        nn1 = tf.layers.dropout(inputs=nn1,
                                 rate=self.dropout,
                                 training=self.should_drop
                                 )
 
         for i in range(1, len(self.hidden_layers)):
-            nn0 = tf.keras.layers.Dense(
+            nn0 = tf.layers.dense(
                 inputs=nn0,
                 units=self.hidden_layers[i],
                 activation=self.feature_activation,
@@ -258,7 +260,7 @@ class directRanker(BaseEstimator):
                 kernel_regularizer=regularizer,
                 name="nn_hidden_" + str(i)
             )
-            nn1 = tf.keras.layers.Dense(
+            nn1 = tf.layers.dense(
                 inputs=nn1,
                 units=self.hidden_layers[i],
                 activation=self.feature_activation,
@@ -270,11 +272,11 @@ class directRanker(BaseEstimator):
             )
 
             # Layer Dropout
-            nn0 = tf.keras.layers.Dropout(inputs=nn0,
+            nn0 = tf.layers.dropout(inputs=nn0,
                                     rate=self.dropout,
                                     training=self.should_drop
                                     )
-            nn1 = tf.keras.layers.Dropout(inputs=nn1,
+            nn1 = tf.layers.dropout(inputs=nn1,
                                     rate=self.dropout,
                                     training=self.should_drop
                                     )
@@ -282,7 +284,7 @@ class directRanker(BaseEstimator):
         # Creating antisymmetric features for the ranking
         self.nn = (nn0 - nn1) / 2.
 
-        self.nn = tf.keras.layers.Dense(
+        self.nn = tf.layers.dense(
             inputs=self.nn,
             units=1,
             activation=self.ranking_activation,
@@ -292,7 +294,7 @@ class directRanker(BaseEstimator):
             name="nn_rank"
         )
 
-        self.nn_cls = tf.keras.layers.Dense(
+        self.nn_cls = tf.layers.dense(
             inputs=nn0 / 2.,
             units=1,
             activation=self.ranking_activation,
