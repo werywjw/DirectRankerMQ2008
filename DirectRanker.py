@@ -100,7 +100,7 @@ class directRanker(BaseEstimator):
         self.end_qids = end_qids
         self.start_qids = start_qids
         self.weight_func = weight_function
-        self.feature_func_nn0_1 = feature_func_nn0_1
+        self.feature_func_nn0_1 = feature_func_nn0_1 #
 
         self.weight_regularization = weight_regularization
         self.dropout = dropout

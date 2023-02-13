@@ -67,8 +67,7 @@ for train, test in zip(list_of_train, list_of_test):
     )
 
     # MQ2007/8 binarize 1 if label > 0.5 else 0
-    x_train, y_train, _ = hlps.readData(data_path=train, binary=True, at=10, number_features=46, bin_cutoff=0.5,
-                                   cut_zeros=True)
+    x_train, y_train, _ = hlps.readData(data_path=train, binary=True, at=10, number_features=46, bin_cutoff=0.5, cut_zeros=True)
     x_test, y_test, _ = hlps.readData(data_path=test, binary=True, at=10, number_features=46, bin_cutoff=0.5, cut_zeros=True)
 
     clf = GridSearchCV(dr, parameters, cv=5, n_jobs=4, verbose=1, scoring=scoring, refit='NDGC@10',

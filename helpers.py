@@ -7,7 +7,7 @@ from sklearn.preprocessing import QuantileTransformer
 from sklearn.metrics import average_precision_score
 
 
-def readData(data_path=None, debug_data=False, binary=False, preprocessing="quantile_3", at=10, number_features=136,
+def readData(data_path=None, debug_data=False, binary=False, preprocessing="quantile_3", at=10, number_features=45, #change to 136 or 46
              bin_cutoff=1.5, cut_zeros=False):
     """
     Function for reading the letor data
@@ -27,17 +27,17 @@ def readData(data_path=None, debug_data=False, binary=False, preprocessing="quan
     q = []
     for line in open(path):
         s = line.split()
-        if binary:
+        if binary: #True for all dataset except TREC
             if int(s[0]) > bin_cutoff:
-                y.append(1)
+                y.append(1) #OHSUMED:2->1, 1->1, 0->0 same
             else:
                 y.append(0)
         else:
-            y.append(int(s[0]))
+            y.append(int(s[0])) #y ranking relevance
 
-        q.append(int(s[1].split(":")[1]))
+        q.append(int(s[1].split(":")[1])) #query after:
 
-        x.append(np.zeros(number_features))
+        x.append(np.zeros(number_features)) #shape(45,) [0.
         for i in range(number_features):
             x[-1][i] = float(s[i + 2].split(":")[1])
 
@@ -61,6 +61,9 @@ def readData(data_path=None, debug_data=False, binary=False, preprocessing="quan
                 continue
         xt.append(x[q == qid])
         yt.append(y[q == qid])
+        print(xt)
+        print(yt)
+        print(q)
 
     return xt, yt, q
 
@@ -73,7 +76,7 @@ def nDCG_cls(estimator, X, y, at=10):
         :param y: target values of the instances
         :return: ndcg score for the given instances
     """
-    prediction = estimator.predict_proba(X)
+    prediction = estimator.predict_proba(X) #DirectRanker.py line 825
     sort_idx = np.argsort(np.concatenate(prediction))
 
     sorted_list = y[sort_idx][::-1]
@@ -139,47 +142,6 @@ def MAP_cls(estimator, X, y):
     return float(np.mean(listOfAvgP))
 
 if __name__ == "__main__":
-    x = []
-    y = []
-    q = []
-    for line in open("/Users/wery/Desktop/MSLR-WEB10K/Fold1/test.txt"):
-        s = line.split()
-        if False:
-            if int(s[0]) > 1.5:
-                y.append(1)
-            else:
-                y.append(0)
-        else:
-            y.append(int(s[0]))
-
-        q.append(int(s[1].split(":")[1]))
-
-        x.append(np.zeros(136))
-        for i in range(136):
-            x[-1][i] = float(s[i + 2].split(":")[1])
-
-    if "quantile_3" == "quantile_3":
-        x = QuantileTransformer(
-            output_distribution="normal").fit_transform(x) / 3
-    else:
-        x = np.array(x)
-    y = np.array([y]).transpose()
-    q = np.array(q)
-    xt = []
-    yt = []
-
-    for qid in np.unique(q):
-        cs = []
-        if False:
-            for yy in y[q == qid][:, 0]:
-                if yy not in cs:
-                    cs.append(yy)
-            if len(cs) == 1:
-                continue
-        xt.append(x[q == qid])
-        yt.append(y[q == qid])
     
-        
-    #print(xt) #len()
-    #print(yt)
-    #print(q)
+    readData(data_path="/Users/wery/Desktop/BAJiawenWang/dataset/OHSUMED/Feature-min/Fold1/trainingset.txt", 
+             binary=True, at=10, number_features=45, bin_cutoff=1.5, cut_zeros=True)
