@@ -29,7 +29,7 @@ def readData(data_path=None, debug_data=False, binary=False, preprocessing="quan
         s = line.split()
         if binary: #True for all dataset except TREC
             if int(s[0]) > bin_cutoff:
-                y.append(1) #OHSUMED:2->1, 1->1, 0->0 same
+                y.append(1) #OHSUMED:2->1, 1->0, 0->0 , only relevance 2 is relevant(different)
             else:
                 y.append(0)
         else:
@@ -53,7 +53,7 @@ def readData(data_path=None, debug_data=False, binary=False, preprocessing="quan
 
     for qid in np.unique(q):
         cs = []
-        if cut_zeros:
+        if cut_zeros: # True always
             for yy in y[q == qid][:, 0]:
                 if yy not in cs:
                     cs.append(yy)
@@ -61,9 +61,9 @@ def readData(data_path=None, debug_data=False, binary=False, preprocessing="quan
                 continue
         xt.append(x[q == qid])
         yt.append(y[q == qid])
-        print(xt)
-        print(yt)
-        print(q)
+        # print(xt)
+        # print(yt)
+        # print(q)
 
     return xt, yt, q
 
